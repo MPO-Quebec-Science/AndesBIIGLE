@@ -12,7 +12,7 @@ library(jsonlite)
 #' @param volume_id The BIIGLE volume id to get images from.
 #' @return A dataframe containing the images in the volume
 #' @export
-get_biigle_images <- function(biigle_api_connection, volume_id) {
+biigle_get_images <- function(biigle_api_connection, volume_id) {
 
     api_path <- paste("/api/v1/volumes/", volume_id, "/filenames", sep = "")
     url_cible <- paste(biigle_api_connection$base_url, api_path, sep = "")

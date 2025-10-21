@@ -53,3 +53,47 @@ biigle_images <- get_biigle_images(
 )
 View(biigle_images)
 
+
+
+##
+## Faire un Label-tree avec les stations et noms scientifiques
+##
+
+# manuellement faire le label tree et les deux parents :Þ
+label_tree_id <- 1234567
+scientific_name_label_id <- 2345678
+station_name_label_id <- 23456789
+
+# boucle sur tous les noms_scientifiques uniques qui apparaissent dans les metadonées d'images
+noms_scientifique <- unique(image_metadata["scientific_name"])
+for (row in 0:nrow(noms_scientifique)) {
+    espece <- noms_scientifique[row, ]
+    biigle_add_label(
+        biigle_api_connection = biigle_api_connection,
+        label_tree_id = label_tree_id,
+        label_name = espece,
+        parent_label_id = scientific_name_label_id
+)
+}
+
+# boucle sur tous les noms_stations uniques qui apparaissent dans les metadonées d'images
+noms_stations <- unique(image_metadata["station_name"])
+for (row in 0:nrow(noms_stations)) {
+    station <- noms_stations[row, ]
+    biigle_add_label(
+        biigle_api_connection = biigle_api_connection,
+        label_tree_id = label_tree_id,
+        label_name = station,
+        parent_label_id = station_name_label_id
+    )
+}
+
+
+# maintenant le label-tree est construit et complet dans BIIGLE, nous pouvons l'obtenir pour voir les ID des étiquettes
+
+etiquettes  <- biigle_get_labels(
+    biigle_api_connection = biigle_api_connection,
+    label_tree_id = label_tree_id
+)
+
+
