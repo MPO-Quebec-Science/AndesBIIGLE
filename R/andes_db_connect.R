@@ -1,4 +1,5 @@
 
+library(DBI)
 
 #' Establish a connection to the andes database
 #'
