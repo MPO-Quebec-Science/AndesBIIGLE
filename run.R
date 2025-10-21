@@ -1,6 +1,6 @@
-
+##
 ## connexion a la BD
-
+##
 url_bd <- "iml-science-4.ent.dfo-mpo.ca"
 port_bd <- 25985 #IML-2025-015 Relevé Écosystemique
 nom_bd <- "andesdb"
@@ -17,6 +17,9 @@ andes_db_connection <- andes_db_connect(
   nom_bd = nom_bd
 )
 
+##
+## Table ANDES en dataframe
+##
 source("R/get_image_metadata.R")
 image_metadata <- get_image_metadata(andes_db_connection)
 View(image_metadata)

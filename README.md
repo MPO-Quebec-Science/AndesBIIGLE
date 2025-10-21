@@ -29,5 +29,11 @@ andes_db_connection <- andes_db_connect(
   nom_bd = nom_bd
 )
 ```
+
 ## Obtenir les tables en dataframes
+``` R
+source("R/get_image_metadata.R")
+image_metadata <- get_image_metadata(andes_db_connection)
+View(image_metadata)
+```
 
