@@ -32,5 +32,9 @@ biigle_get_labels <- function(biigle_api_connection, label_tree_id) {
         colnames(resultat_df) == "id" |
         colnames(resultat_df) == "name"
     ]
+
+    # rename id column to label_id
+    names(resultat_df)[names(resultat_df) == "id"] <- "label_id"
+
     return(resultat_df)
 }

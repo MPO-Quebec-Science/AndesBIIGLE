@@ -73,7 +73,7 @@ for (row in 0:nrow(noms_scientifique)) {
         label_tree_id = label_tree_id,
         label_name = espece,
         parent_label_id = scientific_name_label_id
-)
+    )
 }
 
 # boucle sur tous les noms_stations uniques qui apparaissent dans les metadonées d'images
@@ -90,10 +90,53 @@ for (row in 0:nrow(noms_stations)) {
 
 
 # maintenant le label-tree est construit et complet dans BIIGLE, nous pouvons l'obtenir pour voir les ID des étiquettes
-
 etiquettes  <- biigle_get_labels(
     biigle_api_connection = biigle_api_connection,
     label_tree_id = label_tree_id
 )
 
+#
+# SCIENTIFIQUE NAME
+# ajout scientific_name_label_id, re-nommer les colonnes pour faciliter la fusion
+names(etiquettes)[names(etiquettes) == "name"] <- "scientific_name"
+temp <- (merge(image_metadata, etiquettes, all.x = TRUE, all.y = FALSE))
+names(temp)[names(temp) == "label_id"] <- "scientific_name_label_id"
+image_metadata <- temp
+# remettre l'ancien nom de colonne
+names(etiquettes)[names(etiquettes) == "scientific_name"] <- "name"
 
+#
+# STATION
+# ajout station_label_id, re-nommer les colonnes pour faciliter la fusion
+names(etiquettes)[names(etiquettes) == "name"] <- "station_name"
+temp <- (merge(image_metadata, etiquettes, all.x = TRUE, all.y = FALSE))
+names(temp)[names(temp) == "label_id"] <- "station_label_id"
+names(etiquettes)[names(etiquettes) == "station_name"] <- "name"
+image_metadata <- temp
+
+# Maintenant, image_metadata a les deux colonnes supplémentaires: scientific_name_label_id et station_label_id
+View(image_metadata)
+
+
+#
+# Associer les étiquettes au images
+# Pour terminer, il suffit de boucler sur les lignes du dataframe pour associer les étiquettes (scientific_name_label_id et station_label_id) a chaque images.
+for (row in seq_len(nrow(image_metadata))) {
+    image_id <- df[row, "image_id"]
+
+    # ajouter le label scientific name (scientific_name_label_id)
+    scientific_name_label_id <- df[row, "scientific_name_label_id"]
+    biigle_label_image(
+        biigle_api_connection = biigle_api_connection,
+        image_id = image_id,
+        label_id = scientific_name_label_id
+    )
+
+    # ajouter le label de station (station_label_id)
+    station_label_id <- df[row, "station_label_id"]
+    biigle_label_image(
+        biigle_api_connection = biigle_api_connection,
+        image_id = image_id,
+        label_id = station_label_id
+    )
+}
