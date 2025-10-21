@@ -1,0 +1,9 @@
+# Ce fichier est a titre d'exemple
+# Veullez faire une copie .Renviron et changer les valeurs
+# L'emplacement exacte va dépendre de ton setup (Linux / Windows / OSX... Rstudio / VSCode, XCode... etc)
+# Sur Windows avec Rstudio: ce fichier .Renviron peut être déplacé au dossier Documents de l'usager \Users\<ton nom>\Documents\
+# Parfois, le fichier .Renviron peut rester au meme emplacerment que CE fichier (racine du document)
+# Il faut redémarrer R pour enrégistrer les changements .Renviron 
+
+NOM_USAGER_BD = "METTRE_NOM_ICI"
+MOT_DE_PASSE_BD = "METTRE_MOT_DE_PASSE_ICI"
