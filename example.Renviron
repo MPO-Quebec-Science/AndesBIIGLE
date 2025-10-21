@@ -5,5 +5,8 @@
 # Parfois, le fichier .Renviron peut rester au meme emplacerment que CE fichier (racine du document)
 # Il faut redémarrer R pour enrégistrer les changements .Renviron 
 
-NOM_USAGER_BD = "METTRE_NOM_ICI"
-MOT_DE_PASSE_BD = "METTRE_MOT_DE_PASSE_ICI"
+ANDES_NOM_USAGER_BD = "METTRE_NOM_ICI"
+ANDES_MOT_DE_PASSE_BD = "METTRE_MOT_DE_PASSE_ICI"
+
+BIIGLE_EMAIL = "TON_COURRIEL_DE_L_INSTANCE_BIIGLE_MPO"
+BIIGLE_TOKEN = "TON_JETON_DE_L_INSTANCE_BIIGLE_MPO"
