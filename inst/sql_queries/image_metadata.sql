@@ -20,3 +20,5 @@ LEFT JOIN shared_models_mission
 ON shared_models_mission.id = shared_models_sample.mission_id
 --  need to filter by active mission, this should be done in the R function
 -- WHERE shared_models_mission.is_active=1
+--  need to filter by complete images only
+-- WHERE shared_models_image.complete=1

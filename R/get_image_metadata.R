@@ -19,7 +19,10 @@ get_image_metadata <- function(andes_db_connection) {
 
     # add mission filter
     # use the active misison for now.
-    # query <- paste(query, "WHERE shared_models_mission.is_active=1")
+    query <- paste(query, "WHERE shared_models_mission.is_active=1")
+
+    # only select completed images (skip queued)
+    query <- paste(query, "AND shared_models_image.complete=1")
 
     # one day you can choose a different mission by ID,
     # WHERE mission_id={mission_id}
@@ -30,4 +33,3 @@ get_image_metadata <- function(andes_db_connection) {
 
     return(df)
 }
-

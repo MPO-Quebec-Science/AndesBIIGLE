@@ -10,20 +10,32 @@ library(httr)
 #' @param label_name The label string.
 #' @param parent_label_id The id of the parent label.
 #' @export
-biigle_add_label <- function(biigle_api_connection, label_tree_id, label_name, parent_label_id = null) {
+biigle_add_label <- function(biigle_api_connection, label_tree_id, label_name, parent_label_id = NULL) {
     chemin <- paste("/api/v1/label-trees/", label_tree_id, "/labels", sep = "")
     url_cible <- paste(biigle_api_connection$base_url, chemin, sep = "")
 
-    etiquette <- list(
+    if (is.null(parent_label_id)) {
+        etiquette <- list(
         name = label_name,
         color = "#FF0000"
-    )
+        )
+        print(sprintf("Ajout de %s a la list %d ",
+            label_name,
+            label_tree_id
+        ))
 
-    print(sprintf("Ajout de %s a la list %d (parent=%d) ",
-        label_name,
-        label_tree_id,
-        parent_label_id
-    ))
+    } else {
+        etiquette <- list(
+            name = label_name,
+            color = "#FF0000",
+            parent_id = parent_label_id
+        )
+        print(sprintf("Ajout de %s a la list %d (parent=%d) ",
+            label_name,
+            label_tree_id,
+            parent_label_id
+        ))
+    }
 
     reponse <- httr::POST(
         url = url_cible,
@@ -49,7 +61,7 @@ biigle_add_label <- function(biigle_api_connection, label_tree_id, label_name, p
 
     resultat_txt <- httr::content(reponse, "text", encoding = "UTF-8")
     resultat_df <- jsonlite::fromJSON(resultat_txt, flatten = TRUE)
-    return(resultat_df$id[0])
+    return(resultat_df$id)
 }
 
 
@@ -83,8 +95,13 @@ add_unique_column_values_as_labels <- function (biigle_api_connection, image_met
     )
 
     # now add all its children in the branch
-    for (row in 0:nrow(vals)) {
+    for (row in 1:nrow(vals)) {
         label_name <- vals[row, ]
+
+        # skip if the label is NA or empty 
+        if (is.na(label_name) || label_name == "") {
+            next
+        }
         biigle_add_label(
             biigle_api_connection = biigle_api_connection,
             label_tree_id = label_tree_id,

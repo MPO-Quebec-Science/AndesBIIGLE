@@ -18,6 +18,14 @@ biigle_get_images <- function(biigle_api_connection, volume_id) {
     url_cible <- paste(biigle_api_connection$base_url, api_path, sep = "")
 
     reponse <- httr::GET(url = url_cible, accept_json(), biigle_api_connection$auth)
+
+    code_statut <- status_code(reponse)
+    if (code_statut != 200 | code_statut != 201) {
+        sprintf("Erreur lors de le l'obention des images (code=%d)", code_statut)
+        print(content(reponse, "text"))
+        return()
+    }
+
     resultat_txt <- httr::content(reponse, "text", encoding = "UTF-8")
     resultat_list <- jsonlite::fromJSON(resultat_txt, flatten = TRUE)
     # un peu de jonglerie :)
