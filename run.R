@@ -34,7 +34,6 @@ image_metadata$type[image_metadata["strap_code"] < 1000] <- "poisson"
 image_metadata$type[image_metadata["strap_code"] >= 1000] <- "invertebres"
 
 
-
 ##
 ## Connexion et authentification BIIGLE
 ##
@@ -74,41 +73,51 @@ image_metadata <- merge(image_metadata, biigle_images, all.x = TRUE, all.y = FAL
 # manuellement faire le label tree pour la mission, et mettre le ID ici
 label_tree_id <- 139
 source("R/biigle_add_label.R")
-
-# add all the unique scientific names
-add_unique_column_values_as_labels(
+add_unique_column_values_as_labels_bulk(
     biigle_api_connection = biigle_api_connection,
     image_metadata = image_metadata,
     label_tree_id = label_tree_id,
     column_name = "scientific_name")
 
-# add all the unique station names
-add_unique_column_values_as_labels(
-    biigle_api_connection = biigle_api_connection,
-    image_metadata = image_metadata,
-    label_tree_id = label_tree_id,
-    column_name = "station_name")
+# # add all the unique scientific names
+# add_unique_column_values_as_labels(
+#     biigle_api_connection = biigle_api_connection,
+#     image_metadata = image_metadata,
+#     label_tree_id = label_tree_id,
+#     column_name = "scientific_name"
+# )
 
-# add all the unique set_numbers
-add_unique_column_values_as_labels(
-    biigle_api_connection = biigle_api_connection,
-    image_metadata = image_metadata,
-    label_tree_id = label_tree_id,
-    column_name = "set_number")
+# # add all the unique station names
+# add_unique_column_values_as_labels(
+#     biigle_api_connection = biigle_api_connection,
+#     image_metadata = image_metadata,
+#     label_tree_id = label_tree_id,
+#     column_name = "station_name"
+# )
 
-# add all the unique strap codes
-add_unique_column_values_as_labels(
-    biigle_api_connection = biigle_api_connection,
-    image_metadata = image_metadata,
-    label_tree_id = label_tree_id,
-    column_name = "strap_code")
+# # add all the unique set_numbers
+# add_unique_column_values_as_labels(
+#     biigle_api_connection = biigle_api_connection,
+#     image_metadata = image_metadata,
+#     label_tree_id = label_tree_id,
+#     column_name = "set_number"
+# )
 
-# add all the unique types
-add_unique_column_values_as_labels(
-    biigle_api_connection = biigle_api_connection,
-    image_metadata = image_metadata,
-    label_tree_id = label_tree_id,
-    column_name = "type")
+# # add all the unique strap codes
+# add_unique_column_values_as_labels(
+#     biigle_api_connection = biigle_api_connection,
+#     image_metadata = image_metadata,
+#     label_tree_id = label_tree_id,
+#     column_name = "strap_code"
+# )
+
+# # add all the unique types
+# add_unique_column_values_as_labels(
+#     biigle_api_connection = biigle_api_connection,
+#     image_metadata = image_metadata,
+#     label_tree_id = label_tree_id,
+#     column_name = "type"
+# )
 
 
 #
@@ -158,17 +167,17 @@ image_metadata <- merge_label_id(image_metadata,
 )
 
 
-biigle_label_image(
-    biigle_api_connection = biigle_api_connection,
-    image_id = 223139,
-    label_id = 29429
-)
-
 #
 # Associer les étiquettes au images
 # Pour terminer, il suffit de boucler sur les lignes du dataframe pour associer les étiquettes (scientific_name_label_id et station_label_id) a chaque images.
 source("R/biigle_label_image.R")
 for (row in seq_len(nrow(image_metadata))) {
+    sprintf("ajouts d'étiquettes pour image %d / %d ( %.2f )",
+        row,
+        nrow(image_metadata),
+        row*1./nrow(image_metadata)
+
+    )
     image_id <- image_metadata[row, "image_id"]
 
     # ajouter le label scientific name (scientific_name_label_id)
