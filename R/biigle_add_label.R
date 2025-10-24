@@ -46,7 +46,7 @@ biigle_add_label <- function(biigle_api_connection, label_tree_id, label_name, p
 
     # TODO validate 200 response code
     if (httr::status_code(reponse) != 200) {
-        stop(sprintf("Erreur lors de l'ajout du label %s a la label tree %d",
+        stop(sprintf("**  Erreur lors de l'ajout du label %s a la label tree %d",
             label_name,
             label_tree_id
         ))
@@ -105,7 +105,7 @@ biigle_add_bulk_labels <- function(biigle_api_connection, label_tree_id, parent_
         color = color,
         children = children
     )
-   
+
     payload <- list(
         create = list(parent),
         remove = list()
@@ -124,11 +124,11 @@ biigle_add_bulk_labels <- function(biigle_api_connection, label_tree_id, parent_
 
     # validate 200 response code
     code_statut <- httr::status_code(reponse)
-    if (code_statut != 200 | code_statut != 201) {
-        sprintf("Erreur lors de l'ajout en vrac de labels (code=%d)", code_statut)
-        # print(content(reponse, "text"))
-        sprintf("Erreur lors de l'ajout en vrac de labels au label-tree %d", label_tree_id)
-        stop()
+    if (code_statut != 200 && code_statut != 201) {
+        print(sprintf("** Erreur lors de l'ajout en vrac de labels (code=%d)", code_statut))
+        print(sprintf("** Erreur lors de l'ajout en vrac de labels au label-tree %d", label_tree_id))
+        print(content(reponse, as = "parsed"))
+
     }
 
     return()
@@ -203,7 +203,7 @@ add_unique_column_values_as_labels_bulk <- function (biigle_api_connection, imag
     # a single list of names
     label_list <- list(name = label_list[, 1])
     if (length(label_list) == 0) {
-        print(sprintf("Aucune valeur unique trouvée pour la colonne %s", column_name))
+        print(sprintf("**  Aucune valeur unique trouvée pour la colonne %s", column_name))
         return()
     }
 

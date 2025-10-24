@@ -55,7 +55,7 @@ biigle_api_connection <- biigle_api_connect(
 ## Obtention des images BIIGLE du volume
 ##
 source("R/biigle_get_images.R")
-volume_id <- 208 # ex: 1234
+volume_id <- 210 # ex: 1234
 biigle_images <- biigle_get_images(
     biigle_api_connection = biigle_api_connection,
     volume_id = volume_id
@@ -70,8 +70,9 @@ image_metadata <- merge(image_metadata, biigle_images, all.x = TRUE, all.y = FAL
 ## Faire un Label-tree BIIGLE avec les stations et noms scientifiques
 ##
 
+
 # manuellement faire le label tree pour la mission, et mettre le ID ici
-label_tree_id <- 139
+label_tree_id <- 141
 source("R/biigle_add_label.R")
 
 # ces colonns vont devenir une branch de labels
@@ -82,6 +83,7 @@ columns_that_are_labels <- c(
     "strap_code",
     "type"
 )
+
 for (column_name in columns_that_are_labels) {
     print(sprintf("Ajout des étiquettes pour la colonne %s", column_name))
     add_unique_column_values_as_labels_bulk(
@@ -107,8 +109,6 @@ etiquettes  <- biigle_get_labels(
 # Pour chaque colonne d'intérêt, nous allons faire un left-merge pour ajouter une nouvelle colonne avec le label_id que nous venons d'obtenir.
 # (e.g., pour "scientific_name" ajouter "scientific_name_label_id")
 source("R/merge_label_id.R")
-
-
 for (column_name in columns_that_are_labels) {
     print(sprintf("Ajouter le label ID opur la colonne %s", column_name))
     # merge on scientific_name to get scientific_name_label_id
@@ -120,32 +120,29 @@ for (column_name in columns_that_are_labels) {
 }
 
 
-
 #
 # Associer les étiquettes au images
 # Pour terminer, il suffit de boucler sur les lignes du dataframe pour associer les étiquettes (scientific_name_label_id et station_label_id) a chaque images.
 source("R/biigle_label_image.R")
 for (row in seq_len(nrow(image_metadata))) {
     image_id <- image_metadata[row, "image_id"]
-
-    sprintf("ajouts d'étiquettes pour image %d / %d ( %.2f )",
+    print(sprintf("Ajouts d'étiquettes pour image (id=%s) %d / %d ( %.2f percent )",
+        image_id,
         row,
         nrow(image_metadata),
         row*1./nrow(image_metadata)
-
-    )
+    ))
 
     for (column_name in columns_that_are_labels) {
         label <- image_metadata[row, column_name]
-        label_id <- image_metadata[row, paste(column_name, "_label_id", sep = ""]
+        label_id <- image_metadata[row, paste(column_name, "_label_id", sep = "")]
+        print(sprintf("    Ajouter le label %s (label_id=%s) de la colonne %s", label, label_id, column_name))
+        # ajouter le label a l'image
 
-        print(sprintf("\t Ajouter le label %s (label_id=%d) de la colonne %s", label, label_id, column_name))
-        # ajouter le label scientific name (scientific_name_label_id)
         biigle_label_image(
             biigle_api_connection = biigle_api_connection,
             image_id = image_id,
             label_id = label_id
         )
     }
-
 }
