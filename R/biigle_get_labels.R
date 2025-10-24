@@ -22,7 +22,7 @@ biigle_get_labels <- function(biigle_api_connection, label_tree_id) {
         biigle_api_connection$auth
     )
 
-    code_statut <- status_code(reponse)
+    code_statut <- httr::status_code(reponse)
     if (code_statut != 200 | code_statut != 201) {
         sprintf("Erreur lors de le l'obention des labels (code=%d)", code_statut)
         print(content(reponse, "text"))

@@ -24,14 +24,14 @@ biigle_label_image <- function(biigle_api_connection, image_id, label_id) {
         body = etiquette,
         encode = "json",
         biigle_api_connection$auth)
-    code_statut <- status_code(reponse)
+    code_statut <- httr::status_code(reponse)
     if (code_statut != 200 | code_statut != 201) {
         sprintf("Erreur lors de l'ajout du label_id=%s a image_id=%s (code=%d)",
             label_id,
             image_id,
             code_statut
         )
-        print(content(reponse, "text"))
+        print(httr::content(reponse, as = "parsed"))
         return()
     }
 }
