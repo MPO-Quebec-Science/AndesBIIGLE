@@ -31,11 +31,12 @@ biigle_add_label <- function(biigle_api_connection, label_tree_id, label_name, p
             color = "#FF0000",
             parent_id = parent_label_id
         )
-        print(sprintf("Ajout de %s a la list %d (parent=%d) ",
+        msg <- sprintf("Ajout de %s a la list %d (parent=%d) ",
             label_name,
             label_tree_id,
             parent_label_id
-        ))
+        )
+        print(msg)
     }
 
     reponse <- httr::POST(
@@ -44,12 +45,15 @@ biigle_add_label <- function(biigle_api_connection, label_tree_id, label_name, p
         encode = "json",
         biigle_api_connection$auth)
 
-    # TODO validate 200 response code
-    if (httr::status_code(reponse) != 200) {
-        stop(sprintf("**  Erreur lors de l'ajout du label %s a la label tree %d",
+    code_statut <- httr::status_code(reponse)
+    if (code_statut != 200 && code_statut != 201) {
+        msg <- sprintf(
+            "**  Erreur lors de l'ajout du label %s a la label tree %d",
             label_name,
             label_tree_id
-        ))
+        )
+        print(msg)
+        stop()
     }
     # A successfull response contains the label id in a JSON
     # {
@@ -70,7 +74,7 @@ biigle_add_label <- function(biigle_api_connection, label_tree_id, label_name, p
 #'
 #' This makes a POST API call to api/v1/label-trees/:id/merge-labels
 #' https://biigle.de/doc/api/index.html#api-Label_Trees-StoreLabelTreesMergeLabels
-#' 
+#'
 #' @param biigle_api_connection An api connection helper object. Use biigle_api_connect() to create one.
 #' @param label_tree_id The label tree ID.
 #' @param parent_label_name The label string of the new parent label.
@@ -128,7 +132,6 @@ biigle_add_bulk_labels <- function(biigle_api_connection, label_tree_id, parent_
         print(sprintf("** Erreur lors de l'ajout en vrac de labels (code=%d)", code_statut))
         print(sprintf("** Erreur lors de l'ajout en vrac de labels au label-tree %d", label_tree_id))
         print(content(reponse, as = "parsed"))
-
     }
 
     return()
@@ -140,18 +143,18 @@ biigle_add_bulk_labels <- function(biigle_api_connection, label_tree_id, parent_
 #' The Label branch comprises a parent node, and contains all unique values under column_name from image_metadata as child nodes.
 #' This makes a POST API call to api/v1/label-trees/:id/labels
 #' https://biigle.de/doc/api/index.html#api-Label_Trees-StoreLabelTreesLabels
-#' 
+#'
 #' Example, this is usefull to add all unique scientific names as labels under a parent node "scientific_name"
 #' And will allow to tag images with their scientific names from this tree.
-#' 
+#'
 #' @param biigle_api_connection An api connection helper object. Use biigle_api_connect() to create one.
-#' @param image_metadata The the dataframe having the labels under a columns
+#' @param label_data The the dataframe having the labels under a columns
 #' @param label_tree_id The label tree id.
 #' @param column_name The name of the column in image_metadata that contains the labels to add.
 #' @export
-add_unique_column_values_as_labels <- function (biigle_api_connection, image_metadata, label_tree_id, column_name) {
+add_unique_column_values_as_labels <- function(biigle_api_connection, label_data, label_tree_id, column_name) {
     # boucle sur tous les valeurs uniques de la colonne
-    vals <- unique(image_metadata[column_name])
+    vals <- unique(label_data[column_name])
     if (nrow(vals) == 0) {
         print(sprintf("Aucune valeur unique trouvée pour la colonne %s", column_name))
         return()
@@ -163,12 +166,11 @@ add_unique_column_values_as_labels <- function (biigle_api_connection, image_met
         label_tree_id = label_tree_id,
         label_name = column_name,
     )
-
     # now add all its children in the branch
-    for (row in 1:nrow(vals)) {
+    for (row in seq_len(nrow(vals))) {
         label_name <- vals[row, ]
 
-        # skip if the label is NA or empty 
+        # skip if the label is NA or empty
         if (is.na(label_name) || label_name == "") {
             next
         }
@@ -186,16 +188,21 @@ add_unique_column_values_as_labels <- function (biigle_api_connection, image_met
 #' The Label branch comprises a parent node, and contains all unique values under column_name from image_metadata as child nodes.
 #' This makes a POST API call to api/v1/label-trees/:id/labels
 #' https://biigle.de/doc/api/index.html#api-Label_Trees-StoreLabelTreesLabels
-#' 
+#'
 #' Example, this is usefull to add all unique scientific names as labels under a parent node "scientific_name"
 #' And will allow to tag images with their scientific names from this tree.
-#' 
+#'
 #' @param biigle_api_connection An api connection helper object. Use biigle_api_connect() to create one.
 #' @param image_metadata The the dataframe having the labels under a columns
 #' @param label_tree_id The label tree id.
 #' @param column_name The name of the column in image_metadata that contains the labels to add.
 #' @export
-add_unique_column_values_as_labels_bulk <- function (biigle_api_connection, image_metadata, label_tree_id, column_name) {
+add_unique_column_values_as_labels_bulk <- function(
+    biigle_api_connection,
+    image_metadata,
+    label_tree_id,
+    column_name
+    ) {
     # boucle sur tous les valeurs uniques de la colonne
     label_list <- unique(image_metadata[column_name])
     # retirer les NA

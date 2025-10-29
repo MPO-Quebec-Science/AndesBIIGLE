@@ -21,7 +21,8 @@ biigle_get_images <- function(biigle_api_connection, volume_id) {
 
     code_statut <- httr::status_code(reponse)
     if (code_statut != 200 && code_statut != 201) {
-        print(sprintf("** Erreur lors de le l'obention des images (code=%d)", code_statut))
+        msg <- sprintf("** Erreur lors de le l'obention des images (code=%d)", code_statut) 
+        print(msg)
         print(content(reponse, as = "parsed"))
         return()
     }

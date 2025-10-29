@@ -24,14 +24,14 @@ biigle_get_labels <- function(biigle_api_connection, label_tree_id) {
 
     code_statut <- httr::status_code(reponse)
     if (code_statut != 200 && code_statut != 201) {
-        print(sprintf("** Erreur lors de le l'obention des labels (code=%d)", code_statut))
+        msg <- sprintf("** Erreur lors de le l'obention des labels (code=%d)", code_statut)
+        print(msg)
         print(content(reponse, as = "parsed"))
         return()
     }
 
     resultat_txt <- httr::content(reponse, "text", encoding = "UTF-8")
     resultat_df <- jsonlite::fromJSON(resultat_txt, flatten = TRUE)
-
     resultat_df <- resultat_df$labels
 
     # only keep two columns: id and name

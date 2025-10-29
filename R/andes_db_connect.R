@@ -39,8 +39,10 @@ andes_db_connect <- function(
         "PASSWORD=", mot_de_passe,
         sep = "")
 
-    andes_db_connection <- DBI::dbConnect(odbc::odbc(),
-                      .connection_string = connection_string,
-                      timeout = 10)
+    andes_db_connection <- DBI::dbConnect(
+        odbc::odbc(),
+        .connection_string = connection_string,
+        timeout = 10
+    )
     return(andes_db_connection)
 }
