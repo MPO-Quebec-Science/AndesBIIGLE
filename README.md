@@ -37,3 +37,8 @@ image_metadata <- get_image_metadata(andes_db_connection)
 View(image_metadata)
 ```
 
+
+Il éxiste deux variantes de script à rouler:
+ - `run_create_labeltree.R` Dans cette variante, un nouveau labeltree va être ajouter comme source de labels.
+ - `run_reuse_labeltree.R` Dans cette variante, les labeltrees éxiste déja (possiblement avec d'autres projets) et ils seront réutilisé sur le nouveau volume.
+
