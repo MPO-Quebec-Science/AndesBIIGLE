@@ -81,7 +81,8 @@ columns_that_are_labels <- c(
     "station_name",
     "set_number",
     "strap_code",
-    "type"
+    "type",
+    "aphia_id"
 )
 
 for (column_name in columns_that_are_labels) {
