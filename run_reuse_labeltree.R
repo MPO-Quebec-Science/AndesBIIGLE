@@ -1,4 +1,3 @@
-
 ##
 ## connexion a la BD ANDES
 ##
@@ -217,14 +216,16 @@ columns_that_are_labels <- c(
 # Associer les étiquettes au images
 # Pour terminer, il suffit de boucler sur les lignes du dataframe pour associer les étiquettes (scientific_name_label_id et station_label_id) a chaque images.
 source("R/biigle_label_image.R")
+
 for (row in seq_len(nrow(image_metadata))) {
+
 
     image_id <- image_metadata[row, "image_id"]
     msg <- sprintf("Ajouts d'étiquettes pour image (id=%s) %d / %d ( %.2f percent )",
         image_id,
         row,
         nrow(image_metadata),
-        row*1./nrow(image_metadata)
+        row*100./nrow(image_metadata)
     )
     print(msg)
 
