@@ -12,10 +12,11 @@ library(DBI)
 #' @return A dataframe containing the image metadata: filename, aphia_id, scientific_name, set_number, latitude, longitude, station_name, code.
 #' @export
 get_image_metadata <- function(andes_db_connection) {
-    # query <- readr::read_file(system.file("sql_queries",
-    #                                       "image_metadata.sql",
-    #                                       package = "ANDESBIIGLE"))
-    query <- readr::read_file("inst/sql_queries/image_metadata.sql")
+
+    query <- readr::read_file(system.file("sql_queries",
+                                          "image_metadata.sql",
+                                          package = "ANDESBIIGLE"))
+    # query <- readr::read_file("inst/sql_queries/image_metadata.sql")
 
     # add mission filter
     # use the active misison for now.
@@ -26,6 +27,9 @@ get_image_metadata <- function(andes_db_connection) {
 
     # one day you can choose a different mission by ID,
     # WHERE mission_id={mission_id}
+
+    # # only select catch images 
+    # query <- paste(query, "AND shared_models_image.type='catch'")
 
     result <- DBI::dbSendQuery(andes_db_connection, query)
     df <- DBI::dbFetch(result, n = Inf)

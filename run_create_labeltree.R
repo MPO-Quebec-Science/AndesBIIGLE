@@ -2,7 +2,7 @@
 ##
 ## connexion a la BD ANDES
 ##
-andes_url_bd <- "iml-science-4.ent.dfo-mpo.ca"
+andes_url_bd <- "wgqciml9036141.ent.dfo-mpo.ca"
 andes_port_bd <- 25985 #IML-2025-015 Relevé Écosystemique
 andes_nom_bd <- "andesdb"
 andes_nom_usager_bd <- Sys.getenv("ANDES_NOM_USAGER_BD")
