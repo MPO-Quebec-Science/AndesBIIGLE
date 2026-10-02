@@ -1,0 +1,14 @@
+Package: AndesBIIGLE
+Title: Create BIIGLE Volume From ANDES Mission
+Version: 0.0.0.9000
+Author: Les amis de l'IML
+Maintainer: David Sean-Fortin <david.sean-fortin@dfo-mpo.gc.ca>
+Description: Connects to an ANDES mission and create a BIIGLE volume from caputred images. This will create a labeltree and add tags (species code, aphiaid, set number) taken from ANDES.
+License: file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
+Imports:
+    odbc,
+    DBI,
+    httr

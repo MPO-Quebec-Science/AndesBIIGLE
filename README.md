@@ -1,7 +1,30 @@
 # AndesBIIGLE
 Scripts de gestion de volume BIIGLE a partir de missions ANDES
 
+## Installation
 
+### Installation de pilotes MySQL
+Les requetes de la BD MySQL Andes requiert un pilote.
+Le pilote `{MySQL ODBC 8.0 Unicode Driver}` devraient être disponible pour les postes standards du MPO.
+Il peut être installé via le center logiciel.
+Nom: `MySQL Connector ODBC`
+Version `8.0.22`
+URL: `softwarecenter:SoftwareID=ScopeId_A90E3BBE-DB35-4A92-A44E-15F8C7C595B3/Application_dec16a4a-d57f-44b1-8a9f-8f6267f34539`
+
+Une fois le pilote installé, essayez la commande `odbc::odbcListDrivers()` pour confirmer sa présence.
+
+
+### Option 1 installer avec `pak`
+ ``` R
+ install.packages("pak")`
+ pak::pak("MPO-Quebec-Science/AndesBIIGLE")
+ ```
+
+### Option 2 installer avec `devtools`
+``` R
+install.packages("devtools")
+devtools::install_github("MPO-Quebec-Science/AndesBIIGLE")
+```
 
 ## Connexion et authentification a la BD ANDES  
 
@@ -14,13 +37,12 @@ Ces informations seront par la suite disponnible via la fonction `Sys.getenv()`,
 ``` R
 # Infos connexion BD, voir section Authentification Connexion BD
 url_bd <- "iml-science-4.ent.dfo-mpo.ca"
-port_bd <- 25993
+port_bd <- 25993 # pour la IML-2025-007
 nom_bd <- "andesdb"
 nom_usager <- Sys.getenv("NOM_USAGER_BD")
 mot_de_passe <- Sys.getenv("MOT_DE_PASSE_BD")
 
 # établir connexion BD (il faut être sur le réseau MPO)
-source("R/andes_db_connect.R")
 andes_db_connection <- andes_db_connect(
   url_bd = url_bd,
   port_bd = port_bd,
@@ -32,7 +54,6 @@ andes_db_connection <- andes_db_connect(
 
 ## Obtenir les tables en dataframes
 ``` R
-source("R/get_image_metadata.R")
 image_metadata <- get_image_metadata(andes_db_connection)
 View(image_metadata)
 ```

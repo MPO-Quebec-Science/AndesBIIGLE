@@ -15,7 +15,7 @@ get_image_metadata <- function(andes_db_connection) {
 
     query <- readr::read_file(system.file("sql_queries",
                                           "image_metadata.sql",
-                                          package = "ANDESBIIGLE"))
+                                          package = "AndesBIIGLE"))
     # query <- readr::read_file("inst/sql_queries/image_metadata.sql")
 
     # add mission filter

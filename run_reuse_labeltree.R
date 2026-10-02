@@ -1,3 +1,6 @@
+# devtools::load_all()
+# devtools::document()
+
 ##
 ## connexion a la BD ANDES
 ##
@@ -8,7 +11,6 @@ andes_nom_usager_bd <- Sys.getenv("ANDES_NOM_USAGER_BD")
 andes_mot_de_passe_bd <- Sys.getenv("ANDES_MOT_DE_PASSE_BD")
 
 # établir connexion BD (il faut être sur le réseau MPO)
-source("R/andes_db_connect.R")
 andes_db_connection <- andes_db_connect(
     url_bd = andes_url_bd,
     port_bd = andes_port_bd,
@@ -21,7 +23,6 @@ andes_db_connection <- andes_db_connect(
 ##
 ## Table ANDES en dataframe
 ##
-source("R/get_image_metadata.R")
 image_metadata <- get_image_metadata(andes_db_connection)
 View(image_metadata)
 
@@ -51,7 +52,6 @@ image_metadata$nafo_name <- paste0("OPANO: ", image_metadata$nafo_name)
 ##
 ## Connexion et authentification BIIGLE
 ##
-source("R/biigle_api_connect.R")
 biigle_base_url <- "http://biigle.ent.dfo-mpo.ca"
 biigle_email <- Sys.getenv("BIIGLE_EMAIL")
 biigle_token <- Sys.getenv("BIIGLE_TOKEN")
@@ -68,7 +68,6 @@ biigle_api_connection <- biigle_api_connect(
 ##
 ## Obtention des images BIIGLE du volume
 ##
-source("R/biigle_get_images.R")
 volume_id <- 213 # ex: 1234
 biigle_images <- biigle_get_images(
     biigle_api_connection = biigle_api_connection,
@@ -86,7 +85,6 @@ image_metadata <- merge(image_metadata, biigle_images, all.x = TRUE, all.y = FAL
 ##
 ## Label-tree BIIGLE avec les stations et noms scientifiques
 ##
-source("r/biigle_get_labels.R")
 # Label tree pour scientific_name
 # Name: Taxons_IML
 # Description: Liste taxonomique des taxons utilisé dans les divers projets de LIML dans le cadre de ses mandats au sein du MPO
@@ -154,7 +152,6 @@ no_trait_labels <- biigle_get_labels(biigle_api_connection, label_tree_id)
 # Ajouter des colonnes ayant le label_id correspondant a chaque valeur dans image_metadata
 # Pour chaque colonne d'intérêt, nous allons faire un left-merge pour ajouter une nouvelle colonne avec le label_id que nous venons d'obtenir.
 # (e.g., pour "scientific_name" ajouter "scientific_name_label_id")
-source("R/merge_label_id.R")
 
 #
 # merge on scientific_name to get scientific_name_label_id
@@ -215,10 +212,8 @@ columns_that_are_labels <- c(
 #
 # Associer les étiquettes au images
 # Pour terminer, il suffit de boucler sur les lignes du dataframe pour associer les étiquettes (scientific_name_label_id et station_label_id) a chaque images.
-source("R/biigle_label_image.R")
 
 for (row in seq_len(nrow(image_metadata))) {
-
 
     image_id <- image_metadata[row, "image_id"]
     msg <- sprintf("Ajouts d'étiquettes pour image (id=%s) %d / %d ( %.2f percent )",
