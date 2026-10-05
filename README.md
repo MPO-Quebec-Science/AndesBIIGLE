@@ -16,12 +16,14 @@ Une fois le pilote installé, essayez la commande `odbc::odbcListDrivers()` pour
 
 ### Option 1 installer avec `pak`
  ``` R
+ #detach("package:AndesBIIGLE", unload = TRUE)
  install.packages("pak")`
  pak::pak("MPO-Quebec-Science/AndesBIIGLE")
  ```
 
 ### Option 2 installer avec `devtools`
 ``` R
+#detach("package:AndesBIIGLE", unload = TRUE)
 install.packages("devtools")
 devtools::install_github("MPO-Quebec-Science/AndesBIIGLE")
 ```
